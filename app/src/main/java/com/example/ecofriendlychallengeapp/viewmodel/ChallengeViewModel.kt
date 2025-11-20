@@ -112,7 +112,7 @@ open class ChallengeViewModel(app: Application) : AndroidViewModel(app) {
 
         // --- Business Logic ---
 
-        private fun updateProgressData(entries: List<ChallengeLogEntry>) {
+        fun updateProgressData(entries: List<ChallengeLogEntry>) {
             // Defining today's date
             val today = LocalDate.now()
 
