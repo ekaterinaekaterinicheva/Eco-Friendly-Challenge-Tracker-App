@@ -9,9 +9,10 @@ import androidx.room.PrimaryKey
 data class ChallengeLogEntry (
 
     // Assigning a primary key to each field in the entity
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
 
     // Column names in the table:
+    val id: Int = 0,
     val challenge: String?,
     val date: String?,
     val success: Boolean?

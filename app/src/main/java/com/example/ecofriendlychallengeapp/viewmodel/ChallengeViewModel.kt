@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-open class ChallengeViewModel(app: Application) : AndroidViewModel(app) {
+open class ChallengeViewModel(app: Application, injectedRepository: ChallengeRepository? = null) : AndroidViewModel(app) {
 
     // Initializing a repository
-    private val repository: ChallengeRepository
-    val entries: LiveData<List<ChallengeLogEntry>>
+    private val repository: ChallengeRepository =  injectedRepository ?: ChallengeRepository(AppDatabase.getDatabase(app).challengeDao())
+    val entries: LiveData<List<ChallengeLogEntry>> = repository.allEntries
 
     // Encapsulation _message as mutable
     private val _message = MutableLiveData<String>()
@@ -43,9 +43,6 @@ open class ChallengeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     init {
-        val dao = AppDatabase.getDatabase(app).challengeDao()
-        repository = ChallengeRepository(dao)
-        entries = repository.allEntries
         // Ensuring that progress data is always up-to-date
         entries.observeForever(entryObserver)
     }
@@ -112,7 +109,7 @@ open class ChallengeViewModel(app: Application) : AndroidViewModel(app) {
 
         // --- Business Logic ---
 
-        private fun updateProgressData(entries: List<ChallengeLogEntry>) {
+        fun updateProgressData(entries: List<ChallengeLogEntry>) {
             // Defining today's date
             val today = LocalDate.now()
 
@@ -151,7 +148,6 @@ open class ChallengeViewModel(app: Application) : AndroidViewModel(app) {
             goalStartDate = startDate
             goalDurationDays = durationDays
             updateProgressData(entries.value ?: emptyList())
-            //entries.value?.let { updateProgressData(it) }
         }
 }
 
